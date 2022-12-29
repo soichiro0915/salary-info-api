@@ -11,21 +11,55 @@ datasource db {
 }
 
 model User {
-  id              Int      @default(autoincrement()) @id
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  email           String   @unique
-  hashedPassword  String
-  name            String?  
-  terms           Term[]
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email          String  @unique
+  hashedPassword String
+  name           String?
+
+  terms      Term[]
+  SalaryInfo SalaryInfo[]
 }
 
 model Term {
-  id              Int      @default(autoincrement()) @id
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  year            Int
-  month           Int
-  userId          Int
-  user            User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  year Int
+
+  salaryInfo SalaryInfo[]
+  userId     Int
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SalaryInfo {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  month                      Int
+  //収入
+  basicSalary                Int? @default(0)
+  overtimePay                Int? @default(0)
+  allowances                 Int? @default(0)
+  bonus                      Int? @default(0)
+  otherSalary                Int? @default(0)
+  //控除
+  incomeTax                  Int? @default(0)
+  residentTax                Int? @default(0)
+  healthInsurancePremium     Int? @default(0)
+  annuityPrice               Int? @default(0)
+  employmentInsurancePremium Int? @default(0)
+  federalLawPermits          Int? @default(0)
+  otherDeduction             Int? @default(0)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  termId Int
+  term   Term @relation(fields: [termId], references: [id], onDelete: Cascade)
+
+  @@unique([termId, month])
 }

@@ -29,12 +29,10 @@ export class TermService {
   }
 
   async createTerm(userId: number, dto: CreateTermDto): Promise<Term> {
-    console.log(dto);
     const term = await this.prisma.term.create({
       data: {
         userId,
         year: Number(dto.year),
-        month: Number(dto.month),
       },
     });
 
@@ -56,17 +54,12 @@ export class TermService {
       throw new ForbiddenException('No permission to update');
     }
 
-    // 文字列型数値なら数値に変換する
-    const data = {};
-    for (const [key, value] of Object.entries(dto)) {
-      data[key] = Number.isNaN(value) ? value : Number(value);
-    }
     return await this.prisma.term.update({
       where: {
         id: termId,
       },
       data: {
-        ...data,
+        ...change_stringNumber_to_number(dto),
       },
     });
   }
@@ -89,3 +82,12 @@ export class TermService {
     });
   }
 }
+
+// 文字列の数字を数値に変換する関数
+const change_stringNumber_to_number = (obj) => {
+  const data = {};
+  for (const [key, value] of Object.entries(obj)) {
+    data[key] = Number.isNaN(value) ? value : Number(value);
+  }
+  return data;
+};
