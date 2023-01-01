@@ -46,11 +46,6 @@ export class SalaryInfoController {
     return this.salaryInfoService.createSalaryInfo(req.user.id, termId, dto);
   }
 
-  @Post()
-  createSalaryInfos(@Req() req: Request): Promise<void> {
-    return this.salaryInfoService.createSalaryInfos(req.user.id, 1);
-  }
-
   @Patch(':id')
   updateSalaryInfoById(
     @Req() req: Request,

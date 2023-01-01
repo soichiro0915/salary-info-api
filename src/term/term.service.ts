@@ -36,6 +36,19 @@ export class TermService {
       },
     });
 
+    const salaryInfosBatchPayload = await this.prisma.salaryInfo.createMany({
+      data: [...Array(12)]
+        .map((_, i) => i + 1)
+        .map((month) => ({
+          userId,
+          month: Number(month),
+          termId: term.id,
+        })),
+    });
+    if (salaryInfosBatchPayload.count !== 12) {
+      throw new ForbiddenException('Failed to create salaryInfos');
+    }
+
     return term;
   }
 

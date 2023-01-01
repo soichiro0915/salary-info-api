@@ -45,18 +45,6 @@ export class SalaryInfoService {
     return salaryInfo;
   }
 
-  async createSalaryInfos(userId: number, termId: number): Promise<void> {
-    const salaryInfos = await this.prisma.salaryInfo.createMany({
-      data: [...Array(12)]
-        .map((_, i) => i + 1)
-        .map((month) => ({
-          userId,
-          termId,
-          month: Number(month),
-        })),
-    });
-  }
-
   async updateSalaryInfoById(
     userId: number,
     salaryInfoId: number,
